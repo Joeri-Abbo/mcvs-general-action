@@ -146,7 +146,7 @@ runs:
           !**/node_modules/**
     - if: inputs.testing-type == 'yamllint'
       run: |
-        python3 -m pip install --require-hashes --user \
+        python3 -m pip install --require-hashes --only-binary :all: --user \
           -r "${GITHUB_ACTION_PATH}/configs/requirements.txt"
         yamllint -c "${GITHUB_ACTION_PATH}/configs/yamllint.yaml" .
       shell: bash
