@@ -34,15 +34,18 @@ runs:
     - if: |
         github.event_name == 'pull_request' &&
         inputs.testing-type == 'lint-commit'
+      env:
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       run: |
         CONFIGS_PATH="${GITHUB_ACTION_PATH}/configs"
 
-        npm ci --prefix "${CONFIGS_PATH}"
+        npm ci --ignore-scripts --prefix "${CONFIGS_PATH}"
 
-        npx --prefix "${CONFIGS_PATH}" commitlint \
-          --config "$CONFIGS_PATH/commitlint.config.mjs" \
-          --from ${{ github.event.pull_request.base.sha }} \
-          --to ${{ github.event.pull_request.head.sha }} \
+        "${CONFIGS_PATH}/node_modules/.bin/commitlint" \
+          --config "${CONFIGS_PATH}/commitlint.config.mjs" \
+          --from "${BASE_SHA}" \
+          --to "${HEAD_SHA}" \
           --verbose
       shell: bash
     - if: |

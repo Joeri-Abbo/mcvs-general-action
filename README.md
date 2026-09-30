@@ -111,7 +111,14 @@ The `testing-type` values are listed under
 - All GitHub Actions are pinned to commit SHAs for security
 - Python dependencies (yamllint) are installed with `--require-hashes` from
   [`configs/requirements.txt`](configs/requirements.txt)
-- NPM packages (commitlint) are installed via `npm ci` with package-lock.json for integrity verification
+- NPM packages (commitlint) are installed via `npm ci --ignore-scripts`
+  with package-lock.json for integrity verification, and commitlint is
+  invoked at its resolved path in `node_modules/.bin` rather than through
+  `npx`, so a missing dependency is an error instead of an unpinned
+  install from the registry
+- Values taken from the `pull_request` event are passed to shell steps
+  through `env:` and referenced as quoted variables, never interpolated
+  into a `run:` block with `${{ }}`
 - The internal checkout used by `lint-commit` and `lint-git` runs with
   `persist-credentials: false`, so the workflow token is never written to
   `.git/config` in the workspace
