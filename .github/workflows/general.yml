@@ -25,6 +25,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./
+      # zizmor's self-repository audit wants the `$/` spelling here. That
+      # form is undocumented for an action at the repository root, so
+      # changing it is a separate pull request that needs one real run to
+      # verify. Suppressed rather than guessed, because inverting the
+      # zizmor default above makes this low finding block this workflow.
+      # The directive has to sit inside the step's own span, which is why
+      # it rides on the `uses:` line instead of above it.
+      - uses: ./ # zizmor: ignore[self-repository]
         with:
           testing-type: ${{ matrix.args.testing-type }}
