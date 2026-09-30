@@ -101,14 +101,20 @@ jobs:
 The `testing-type` values are listed under
 [Available Testing Types](#available-testing-types).
 
-| Input                           | Description                             | Required | Default |
-| :------------------------------ | :-------------------------------------- | :------- | :------ |
-| testing-type                    | Type of test to run                     | Yes      | N/A     |
-| zizmor-action-advanced-security | Disable advanced security report upload | No       | true    |
+| Input                           | Description                                            | Required | Default |
+| :------------------------------ | :----------------------------------------------------- | :------- | :------ |
+| testing-type                    | Type of test to run                                    | Yes      | N/A     |
+| zizmor-action-advanced-security | Upload to Advanced Security instead of failing the job | No       | false   |
 
 ## Security Considerations
 
 - All GitHub Actions are pinned to commit SHAs for security
+- `lint-action` blocks by default. `zizmor` is run in its annotating
+  mode, which exits non-zero when a finding is present. Setting
+  `zizmor-action-advanced-security: true` switches it to SARIF upload,
+  which **exits zero even when findings exist** and therefore makes
+  `lint-action` non-blocking. It also requires `security-events: write`
+  on the calling job, which a fork pull request cannot be granted
 - Python dependencies (yamllint) are installed with `--require-hashes` from
   [`configs/requirements.txt`](configs/requirements.txt)
 - NPM packages (commitlint) are installed via `npm ci` with package-lock.json for integrity verification

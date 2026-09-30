@@ -7,8 +7,11 @@ inputs:
     description: |
       The testing type, e.g. integration, unit or some other.
   zizmor-action-advanced-security:
-    default: "true"
-    description: Upload results to Advanced Security or not.
+    default: "false"
+    description: |
+      Upload results to GitHub Advanced Security instead of failing the job.
+      Requires `security-events: write` on the calling job, which fork pull
+      requests cannot be granted. Leave false to have findings fail the PR.
 runs:
   using: composite
   steps:
@@ -30,6 +33,7 @@ runs:
       uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
       with:
         advanced-security: ${{ inputs.zizmor-action-advanced-security }}
+        annotations: ${{ inputs.zizmor-action-advanced-security == 'false' }}
         min-severity: low
     - if: |
         github.event_name == 'pull_request' &&
