@@ -112,6 +112,8 @@ The `testing-type` values are listed under
 - Python dependencies (yamllint) are installed with `--require-hashes` from
   [`configs/requirements.txt`](configs/requirements.txt)
 - NPM packages (commitlint) are installed via `npm ci` with package-lock.json for integrity verification
+- Values taken from the `pull_request` event reach shell steps through `env:` and are referenced as quoted
+  variables, never interpolated into a `run:` block with `${{ }}`
 - The internal checkout used by `lint-commit` and `lint-git` runs with
   `persist-credentials: false`, so the workflow token is never written to
   `.git/config` in the workspace
