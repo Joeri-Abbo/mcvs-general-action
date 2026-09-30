@@ -81,44 +81,20 @@ runs:
         fi
         echo "✅ Branch is up to date with ${BASE_REF}"
       shell: bash
-    # yamllint disable rule:line-length
     - if: |
         github.event_name == 'pull_request' &&
         inputs.testing-type == 'lint-git'
       env:
         BASE_REF: ${{ github.event.pull_request.base.ref }}
       run: |
-        BASE="refs/mcvs/base"
-
-        current_branch=$(git rev-parse --abbrev-ref HEAD)
-
-        commits=$(git rev-list "${BASE}..HEAD" --merges)
-
-        for sha in $commits; do
-          p1=$(git rev-parse "$sha^1")
-          p2=$(git rev-parse "$sha^2")
-
-          if git merge-base --is-ancestor "${p1}" "${BASE}" && ! git merge-base --is-ancestor "${p2}" "${BASE}"; then
-            merged_from="${p1}"
-          elif git merge-base --is-ancestor "${p2}" "${BASE}" && ! git merge-base --is-ancestor "${p1}" "${BASE}"; then
-            merged_from="${p2}"
-          else
-            continue
-          fi
-
-          echo "❗ Detected a merge of ${BASE_REF} into ${current_branch} at commit ${sha}"
-          echo "  Commit message: $(git log --format=%s -n 1 $sha)"
-          exit 1
-        done
-
-        echo "✅ No merges of ${BASE_REF} detected in ${current_branch}"
-        exit 0
+        "${GITHUB_ACTION_PATH}/scripts/no-merge-commits.sh" refs/mcvs/base
       shell: bash
     - if: |
         github.event_name == 'pull_request' &&
         inputs.testing-type == 'lint-git'
       run: |
-        fixup_commits=$(git log --oneline --grep="^fixup!" --grep="^squash!" refs/mcvs/base..HEAD)
+        fixup_commits=$(git log --oneline \
+          --grep="^fixup!" --grep="^squash!" refs/mcvs/base..HEAD)
         if [ -n "$fixup_commits" ]; then
           echo "❗ Found fixup or squash commits that should be squashed:"
           echo "$fixup_commits"
