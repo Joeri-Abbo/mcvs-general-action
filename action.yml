@@ -39,7 +39,7 @@ runs:
 
         npm ci --prefix "${CONFIGS_PATH}"
 
-        npx --prefix "${CONFIGS_PATH}" commitlint \
+        "${CONFIGS_PATH}/node_modules/.bin/commitlint" \
           --config "$CONFIGS_PATH/commitlint.config.mjs" \
           --from ${{ github.event.pull_request.base.sha }} \
           --to ${{ github.event.pull_request.head.sha }} \
