@@ -37,7 +37,7 @@ runs:
       run: |
         CONFIGS_PATH="${GITHUB_ACTION_PATH}/configs"
 
-        npm ci --prefix "${CONFIGS_PATH}"
+        npm ci --ignore-scripts --prefix "${CONFIGS_PATH}"
 
         npx --prefix "${CONFIGS_PATH}" commitlint \
           --config "$CONFIGS_PATH/commitlint.config.mjs" \
