@@ -115,6 +115,11 @@ The `testing-type` values are listed under
 - The internal checkout used by `lint-commit` and `lint-git` runs with
   `persist-credentials: false`, so the workflow token is never written to
   `.git/config` in the workspace
+- That checkout pins `github.event.pull_request.head.sha`, not
+  `head.ref`, so the revision that is linted is the revision the check
+  run records. A push to the branch while the job is queued cannot swap
+  the content out from under the check. Note that this is the branch tip
+  as pushed, not the merge result
 
 ## License
 
