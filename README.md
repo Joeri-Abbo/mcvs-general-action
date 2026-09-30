@@ -113,8 +113,8 @@ The `testing-type` values are listed under
   mode, which exits non-zero when a finding is present. Setting
   `zizmor-action-advanced-security: true` switches it to SARIF upload,
   which **exits zero even when findings exist** and therefore makes
-  `lint-action` non-blocking. It also requires `security-events: write`
-  on the calling job, which a fork pull request cannot be granted
+  `lint-action` non-blocking — the findings are filed as code scanning
+  alerts rather than gating the pull request
 - Python dependencies (yamllint) are installed with `--require-hashes` from
   [`configs/requirements.txt`](configs/requirements.txt)
 - NPM packages (commitlint) are installed via `npm ci` with package-lock.json for integrity verification

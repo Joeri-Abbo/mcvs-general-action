@@ -10,8 +10,9 @@ inputs:
     default: "false"
     description: |
       Upload results to GitHub Advanced Security instead of failing the job.
-      Requires `security-events: write` on the calling job, which fork pull
-      requests cannot be granted. Leave false to have findings fail the PR.
+      In that mode zizmor exits 0 even when it reports findings, so the job
+      passes and the pull request is not gated; findings land as code
+      scanning alerts instead. Leave false to have findings fail the PR.
 runs:
   using: composite
   steps:
