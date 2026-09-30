@@ -13,12 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         args:
-          - testing-type: lint-action
-          - testing-type: lint-commit
-          - testing-type: lint-git
-          - testing-type: lint-links
-          - testing-type: markdownlint
-          - testing-type: yamllint
+          - testing-type: nope
+          - testing-type: lychee
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
