@@ -109,6 +109,10 @@ The `testing-type` values are listed under
 ## Security Considerations
 
 - All GitHub Actions are pinned to commit SHAs for security
+- `testing-type` is validated against an allowlist in an unguarded first
+  step. An unrecognised value, or a value that requires the
+  `pull_request` event on a run triggered by something else, fails the
+  job. It never reports success having skipped every check
 - Python dependencies (yamllint) are installed with `--require-hashes` from
   [`configs/requirements.txt`](configs/requirements.txt)
 - NPM packages (commitlint) are installed via `npm ci` with package-lock.json for integrity verification

@@ -4,14 +4,43 @@ description: |
   The Mission Critical Vulnerability Scanner (MCVS) General action.
 inputs:
   testing-type:
+    required: true
     description: |
-      The testing type, e.g. integration, unit or some other.
+      The testing type. Must be one of lint-action, lint-commit, lint-git,
+      lint-links, markdownlint or yamllint. Any other value fails the job
+      rather than skipping every check.
   zizmor-action-advanced-security:
     default: "true"
     description: Upload results to Advanced Security or not.
 runs:
   using: composite
   steps:
+    - name: validate the testing-type input 🚦
+      env:
+        TESTING_TYPE: ${{ inputs.testing-type }}
+        EVENT_NAME: ${{ github.event_name }}
+      run: |
+        case "${TESTING_TYPE}" in
+          lint-links|markdownlint|yamllint)
+            exit 0
+            ;;
+          lint-action|lint-commit|lint-git)
+            if [ "${EVENT_NAME}" != "pull_request" ]; then
+              echo "❗ testing-type '${TESTING_TYPE}' requires the" \
+                   "pull_request event, but this run was triggered by" \
+                   "'${EVENT_NAME}'. No checks were executed."
+              exit 1
+            fi
+            exit 0
+            ;;
+          *)
+            echo "❗ Unknown testing-type '${TESTING_TYPE}'. Valid values:" \
+                 "lint-action, lint-commit, lint-git, lint-links," \
+                 "markdownlint, yamllint. No checks were executed."
+            exit 1
+            ;;
+        esac
+      shell: bash
     - if: |
         github.event_name == 'pull_request' &&
         (inputs.testing-type == 'lint-commit' ||
