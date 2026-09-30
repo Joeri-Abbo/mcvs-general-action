@@ -19,4 +19,4 @@ jobs:
         with:
           persist-credentials: false
       # yamllint disable-line rule:line-length
-      - uses: schubergphilis/mcvs-pr-validation-action@6f153c01301ab2f92336781173b7f3a796de5f3e # v0.2.1
+      - uses: schubergphilis/mcvs-pr-validation-action@6f153c01301ab2f92336781173b7f3a796de5f3e # v0.2.2
